@@ -110,8 +110,8 @@ while True:
         opponent_ai()
 
     else:
-        screen.blit(game_name,game_name_rect)
-        screen.blit(game_start,game_start_rect)
+        screen.blit(game_name, game_name_rect)
+        screen.blit(game_start, game_start_rect)
 
         ai_score = large.render(f'{opponent_score}', False, light_grey)
         ai_score_rect = ai_score.get_rect(center = (320,200))
@@ -119,8 +119,8 @@ while True:
         your_score = large.render(f'{player_score}', False, light_grey)
         your_score_rect = your_score.get_rect(center = (960,200))
 
-        screen.blit(ai_score,ai_score_rect)
-        screen.blit(your_score,your_score_rect)
+        screen.blit(ai_score, ai_score_rect)
+        screen.blit(your_score, your_score_rect)
 
 
     pygame.display.flip()
