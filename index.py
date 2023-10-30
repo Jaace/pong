@@ -33,7 +33,8 @@ def opponent_ai():
         opponent.bottom = screen_height
 
 def ball_restart():
-    global ball_speed_y, ball_speed_x
+    global ball_speed_y, ball_speed_x, game_active
+    game_active = False
     ball.center = (screen_width/2, screen_height/2)
     ball_speed_y *= random.choice((1,-1))
     ball_speed_x *= random.choice((1,-1))
@@ -43,9 +44,13 @@ clock = pygame.time.Clock()
 
 screen_width = 1280
 screen_height = 960
+title = pygame.font.Font('fonts/Eight-Bit Madness.ttf', 150)
+start = pygame.font.Font('fonts/Eight-Bit Madness.ttf', 50)
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Pong')
+
+game_active = False
 
 # Game rectangles
 ball = pygame.Rect(screen_width/2 -15, screen_height/2 - 15, 30, 30)
@@ -54,6 +59,12 @@ opponent = pygame.Rect(10, screen_height/2 - 70, 10, 140)
 
 bg_color = pygame.Color('grey12')
 light_grey = (200, 200, 200)
+
+game_name = title.render('Pong', False, light_grey)
+game_name_rect = game_name.get_rect(center = (640,200))
+
+game_start = start.render('Press Space to Start', False, light_grey)
+game_start_rect = game_start.get_rect(center = (640,400))
 
 ball_speed_x = 7 * random.choice((1,-1))
 ball_speed_y = 7 * random.choice((1,-1))
@@ -65,28 +76,39 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
-                player_speed += 7
-            if event.key == pygame.K_UP:
-                player_speed -= 7
 
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_DOWN:
-                player_speed -= 7
-            if event.key == pygame.K_UP:
-                player_speed += 7
+        if game_active:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    player_speed += 7
+                if event.key == pygame.K_UP:
+                    player_speed -= 7
 
-    ball_animation()
-    player_animation()
-    opponent_ai()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_DOWN:
+                    player_speed -= 7
+                if event.key == pygame.K_UP:
+                    player_speed += 7
 
+        else:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game_active = True
     # Visuals
     screen.fill(bg_color)
     pygame.draw.rect(screen, light_grey, player)
     pygame.draw.rect(screen, light_grey, opponent)
     pygame.draw.ellipse(screen, light_grey, ball)
     pygame.draw.aaline(screen, light_grey, (screen_width/2, 0), (screen_width/2, screen_height))
+
+    if game_active:
+        ball_animation()
+        player_animation()
+        opponent_ai()
+
+    else:
+        screen.blit(game_name,game_name_rect)
+        screen.blit(game_start,game_start_rect)
+
 
     pygame.display.flip()
     clock.tick(60)
