@@ -1,13 +1,15 @@
 import pygame, sys, random
 
 def ball_animation():
-    global ball_speed_x, ball_speed_y
+    global ball_speed_x, ball_speed_y, player_score, opponent_score
     ball.x += ball_speed_x
     ball.y += ball_speed_y
 
     if ball.top <= 0 or ball.bottom >= screen_height:
         ball_speed_y *= -1
     if ball.left <= 0 or ball.right >= screen_width:
+        if ball.left <= 0: player_score += 1
+        else: opponent_score += 1
         ball_restart()
 
     if ball.colliderect(player) or ball.colliderect(opponent):
@@ -44,13 +46,15 @@ clock = pygame.time.Clock()
 
 screen_width = 1280
 screen_height = 960
-title = pygame.font.Font('fonts/Eight-Bit Madness.ttf', 150)
-start = pygame.font.Font('fonts/Eight-Bit Madness.ttf', 50)
+large = pygame.font.Font('fonts/Eight-Bit Madness.ttf', 150)
+small = pygame.font.Font('fonts/Eight-Bit Madness.ttf', 50)
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Pong')
 
 game_active = False
+player_score = 0
+opponent_score = 0
 
 # Game rectangles
 ball = pygame.Rect(screen_width/2 -15, screen_height/2 - 15, 30, 30)
@@ -60,10 +64,10 @@ opponent = pygame.Rect(10, screen_height/2 - 70, 10, 140)
 bg_color = pygame.Color('grey12')
 light_grey = (200, 200, 200)
 
-game_name = title.render('Pong', False, light_grey)
+game_name = large.render('Pong', False, light_grey)
 game_name_rect = game_name.get_rect(center = (640,200))
 
-game_start = start.render('Press Space to Start', False, light_grey)
+game_start = small.render('Press Space to Start', False, light_grey)
 game_start_rect = game_start.get_rect(center = (640,400))
 
 ball_speed_x = 7 * random.choice((1,-1))
@@ -108,6 +112,15 @@ while True:
     else:
         screen.blit(game_name,game_name_rect)
         screen.blit(game_start,game_start_rect)
+
+        ai_score = large.render(f'{opponent_score}', False, light_grey)
+        ai_score_rect = ai_score.get_rect(center = (320,200))
+
+        your_score = large.render(f'{player_score}', False, light_grey)
+        your_score_rect = your_score.get_rect(center = (960,200))
+
+        screen.blit(ai_score,ai_score_rect)
+        screen.blit(your_score,your_score_rect)
 
 
     pygame.display.flip()
