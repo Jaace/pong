@@ -119,6 +119,8 @@ while True:
         your_score = large.render(f'{player_score}', False, light_grey)
         your_score_rect = your_score.get_rect(center = (960,200))
 
+        player_speed = 0
+
         screen.blit(ai_score, ai_score_rect)
         screen.blit(your_score, your_score_rect)
 
