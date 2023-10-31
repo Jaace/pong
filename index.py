@@ -15,14 +15,6 @@ def ball_animation():
     if ball.colliderect(player) or ball.colliderect(opponent):
         ball_speed_x *= -1
 
-def player_animation():
-    player.y += player_speed
-
-    if player.top <= 0:
-        player.top = 0
-    if player.bottom >= screen_height:
-        player.bottom = screen_height
-
 def opponent_ai():
     if opponent.top < ball.y:
         opponent.top += opponent_speed
@@ -43,6 +35,7 @@ def ball_restart():
 
 pygame.init()
 clock = pygame.time.Clock()
+pygame.mouse.set_visible(0)
 
 screen_width = 1280
 screen_height = 960
@@ -82,21 +75,15 @@ while True:
             sys.exit()
 
         if game_active:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_DOWN:
-                    player_speed += 7
-                if event.key == pygame.K_UP:
-                    player_speed -= 7
-
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_DOWN:
-                    player_speed -= 7
-                if event.key == pygame.K_UP:
-                    player_speed += 7
-
+            if event.type == pygame.MOUSEMOTION:
+                x, y = pygame.mouse.get_pos()
+                if y >= screen_height - 140:
+                    player.y = screen_height - 140
+                else: player.y = y
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
+
     # Visuals
     screen.fill(bg_color)
     pygame.draw.rect(screen, light_grey, player)
@@ -106,7 +93,6 @@ while True:
 
     if game_active:
         ball_animation()
-        player_animation()
         opponent_ai()
 
     else:
