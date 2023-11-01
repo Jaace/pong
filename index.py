@@ -1,10 +1,11 @@
 import pygame, sys, random
+from settings import *
 
 class Ball():
     def __init__(self, player, opponent):
         self.speed_x = 7 * random.choice((1,-1))
         self.speed_y = 7 * random.choice((1,-1))
-        self.rect = pygame.Rect(screen_width/2 -15, screen_height/2 - 15, 30, 30)
+        self.rect = pygame.Rect(SCREEN_WIDTH/2 -15, SCREEN_HEIGHT/2 - 15, 30, 30)
         self.player = player
         self.opponent = opponent
 
@@ -15,10 +16,10 @@ class Ball():
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
 
-        if self.rect.top <= 0 or self.rect.bottom >= screen_height:
+        if self.rect.top <= 0 or self.rect.bottom >= SCREEN_HEIGHT:
             self.speed_y *= -1
 
-        if self.rect.left <= 0 or self.rect.right >= screen_width:
+        if self.rect.left <= 0 or self.rect.right >= SCREEN_WIDTH:
             if self.rect.left <= 0: player.update_score()
             else: opponent.update_score()
             self.restart()
@@ -30,7 +31,7 @@ class Ball():
         global game_active
         game_active = False
 
-        self.rect.center = (screen_width/2, screen_height/2)
+        self.rect.center = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
         self.speed_x = 7 * random.choice((1,-1))
         self.speed_y = 7 * random.choice((1,-1))
 
@@ -59,8 +60,8 @@ class Player(Paddle):
     
     def input(self):
         x, y = pygame.mouse.get_pos()
-        if y >= screen_height - 140:
-            self.rect.y = screen_height - 140
+        if y >= SCREEN_HEIGHT - 140:
+            self.rect.y = SCREEN_HEIGHT - 140
         else: self.rect.y = y
 
 class Opponent(Paddle):
@@ -83,12 +84,10 @@ pygame.init()
 clock = pygame.time.Clock()
 pygame.mouse.set_visible(0)
 
-screen_width = 1280
-screen_height = 960
 large = pygame.font.Font('fonts/Eight-Bit Madness.ttf', 150)
 small = pygame.font.Font('fonts/Eight-Bit Madness.ttf', 50)
 
-screen = pygame.display.set_mode((screen_width, screen_height))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Pong')
 
 game_active = False
@@ -97,8 +96,8 @@ bg_color = pygame.Color('grey12')
 light_grey = (200, 200, 200)
 
 # Game rectangles
-player = Player(screen_width - 20, screen_height/2 - 70, light_grey)
-opponent = Opponent(10, screen_height/2 - 70, light_grey)
+player = Player(SCREEN_WIDTH - 20, SCREEN_HEIGHT/2 - 70, light_grey)
+opponent = Opponent(10, SCREEN_HEIGHT/2 - 70, light_grey)
 ball = Ball(player, opponent)
 
 game_name = large.render('Pong', False, light_grey)
@@ -123,7 +122,7 @@ while True:
 
     # Visuals
     screen.fill(bg_color)
-    pygame.draw.aaline(screen, light_grey, (screen_width/2, 0), (screen_width/2, screen_height))
+    pygame.draw.aaline(screen, light_grey, (SCREEN_WIDTH/2, 0), (SCREEN_WIDTH/2, SCREEN_HEIGHT))
 
     if game_active:
         ball.update()
