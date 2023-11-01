@@ -56,6 +56,12 @@ class Paddle():
 class Player(Paddle):
     def __init__(self, left, top, color):
         super().__init__(left, top, color)
+    
+    def input(self):
+        x, y = pygame.mouse.get_pos()
+        if y >= screen_height - 140:
+            self.rect.y = screen_height - 140
+        else: self.rect.y = y
 
 class Opponent(Paddle):
     def __init__(self, left, top, color):
@@ -109,10 +115,8 @@ while True:
 
         if game_active:
             if event.type == pygame.MOUSEMOTION:
-                x, y = pygame.mouse.get_pos()
-                if y >= screen_height - 140:
-                    player.rect.y = screen_height - 140
-                else: player.rect.y = y
+                player.input()
+
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
